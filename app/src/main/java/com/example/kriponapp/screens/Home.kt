@@ -1,11 +1,14 @@
 package com.example.kriponapp.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,6 +41,13 @@ import com.example.kriponapp.R
 import com.example.kriponapp.models.Categories
 import com.example.kriponapp.models.categories
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardElevation
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.example.kriponapp.models.Expenses
 import com.example.kriponapp.viewmodels.HomeViewmodel
 import java.text.SimpleDateFormat
@@ -45,7 +55,6 @@ import java.util.Locale
 
 val ropa = FontFamily(Font(R.font.ropasans_regular))
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
     modifier: Modifier = Modifier,
@@ -54,7 +63,9 @@ fun Home(
     val selectedCategory = homeViewmodel.selectedCategories.value
     val expenses = homeViewmodel.expensesForSelectedCategory
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier
+            .background(Color(0xFFFFFFFF))
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
             item {
@@ -81,6 +92,7 @@ fun ExpenseCard(expenses: List<Expenses>) {
             .padding(horizontal = 12.dp, vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, Color(0xFFDBE2EF)),
+        elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xff3F72AF))// optional shadow
     ) {
         Column(
@@ -144,16 +156,17 @@ fun ExpenseCard(expenses: List<Expenses>) {
 
 @Composable
 fun Category(homeViewmodel: HomeViewmodel) {
+    val selected = homeViewmodel.selectedCategories.value
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 8.dp),
 
     ) {
         Text(
             "Categories",
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             fontFamily = ropa,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
@@ -161,18 +174,69 @@ fun Category(homeViewmodel: HomeViewmodel) {
 
         Spacer(modifier = Modifier.height(12.dp))
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            //horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(categories) { category ->
                 CategoryCard(
                     category = category,
                     onClick = { selectedCategory ->
                         homeViewmodel.onCategorySelected((selectedCategory))
-                    }
+                    },
+                    isSelected = category == selected
                 )
             }
         }
     }
+}
+
+
+
+@Composable
+fun CategoryCard(
+    category: Categories,
+    onClick: (Categories) -> Unit,
+    isSelected: Boolean
+){
+
+    Card(
+        modifier = Modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ){ onClick(category) }
+            .padding(horizontal = 12.dp)
+        ,
+        colors = if(isSelected){
+            CardDefaults.cardColors(containerColor = Color(0xFFDBE2EF))
+        } else{
+            CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))
+        },
+        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(22.dp),
+        border = if (isSelected) {BorderStroke(width = 1.dp, color = Color.Transparent)} else {BorderStroke(width = 2.dp, color = Color(0xFFDBE2EF))}
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = category.categoryIcon,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(22.dp)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                category.categoryTitle,
+                fontFamily = ropa,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+
 }
 
 @Composable
@@ -197,40 +261,6 @@ fun Expenses(expenses: List<Expenses>) {
             ExpenseItem(expenses)
         }
     }
-}
-
-@Composable
-fun CategoryCard(
-    category: Categories,
-    onClick: (Categories) -> Unit) {
-    Card(
-        modifier = Modifier
-            .clickable{onClick(category)},
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFDBE2EF)),
-        shape = RoundedCornerShape(22.dp),
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = category.categoryIcon,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(22.dp)
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                category.categoryTitle,
-                fontFamily = ropa,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-    }
-
 }
 
 @Composable
@@ -284,12 +314,4 @@ fun ExpenseItem(expenses: Expenses) {
             fontFamily = ropa
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    Home(
-        homeViewmodel = HomeViewmodel(),
-    )
 }
