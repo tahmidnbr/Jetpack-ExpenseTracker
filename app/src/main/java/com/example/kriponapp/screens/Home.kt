@@ -1,5 +1,7 @@
 package com.example.kriponapp.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -42,10 +44,13 @@ import androidx.compose.runtime.remember
 import com.example.kriponapp.models.Expenses
 import com.example.kriponapp.viewmodels.HomeViewmodel
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.TextStyle
 import java.util.Locale
 
 val ropa = FontFamily(Font(R.font.ropasans_regular))
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Home(
     modifier: Modifier = Modifier,
@@ -70,20 +75,23 @@ fun Home(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ExpenseCard(expenses: List<Expenses>) {
 
     val total = expenses.sumOf { it.amount }  // Sum all expenses
     val budget = 250 // dynamic if needed
+    val date = LocalDate.now()
+    val monthName = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, Color(0xFFFFD93D)),
+        border = BorderStroke(1.dp, Color(0xFF222831)),
         elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xffFF9A00))// optional shadow
+        colors = CardDefaults.cardColors(containerColor = Color(0xff393E46))// optional shadow
     ) {
         Column(
             modifier = Modifier
@@ -94,15 +102,16 @@ fun ExpenseCard(expenses: List<Expenses>) {
                 "This Month's Spending",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = ropa
+                fontFamily = ropa,
+                color = Color(0xffeeeeee)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                "November",
+                monthName,
                 style = MaterialTheme.typography.bodyLarge,
-                fontFamily = ropa
-
+                fontFamily = ropa,
+                color = Color(0xffeeeeee)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -123,7 +132,7 @@ fun ExpenseCard(expenses: List<Expenses>) {
 
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    "/ $${budget} budget",
+                    "/ ৳${budget} budget",
                     fontSize = 15.sp,
                     fontFamily = ropa,
                     color = Color.LightGray,
@@ -193,13 +202,13 @@ fun CategoryCard(
             .padding(horizontal = 12.dp)
         ,
         colors = if(isSelected){
-            CardDefaults.cardColors(containerColor = Color(0xFFFFD93D))
+            CardDefaults.cardColors(containerColor = Color(0xFF00ADB5))
         } else{
-            CardDefaults.cardColors(containerColor = Color(0xFFF6F1E9))
+            CardDefaults.cardColors(containerColor = Color(0xFFeeeeee))
         },
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(12.dp),
-        border = if (isSelected) {BorderStroke(width = 1.dp, color = Color.Transparent)} else {BorderStroke(width = 2.dp, color = Color(0xFFFFD93D))}
+        border = if (isSelected) {BorderStroke(width = 1.dp, color = Color.Transparent)} else {BorderStroke(width = 2.dp, color = Color(0xFF00ADB5))}
     ) {
         Row(
             modifier = Modifier
@@ -260,7 +269,7 @@ fun ExpenseItem(expenses: Expenses) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Card(
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFD93D)),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF00ADB5)),
             elevation = CardDefaults.cardElevation(4.dp),
 
         ) {

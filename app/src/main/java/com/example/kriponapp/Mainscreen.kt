@@ -128,7 +128,7 @@ fun MainScreen(
         drawerState = drawerState
     ) {
         Scaffold(
-            containerColor = Color(0xffF6F1E9),
+            containerColor = Color(0xffEEEEEE),
             topBar = {
                 TopAppBar(
                     title = {
@@ -143,7 +143,7 @@ fun MainScreen(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color(0xffF6F1E9)
+                        containerColor = Color(0xffEEEEEE)
                     )
                 )
             },
