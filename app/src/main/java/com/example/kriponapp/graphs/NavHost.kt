@@ -19,18 +19,25 @@ import com.example.kriponapp.viewmodels.HomeViewmodel
 fun AppNavGraph(
     navController: NavHostController,
     homeViewModel: HomeViewmodel,
-    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = "main/home"
     ) {
-        composable(Screen.Home.route) {
-            val viewModel: HomeViewmodel = viewModel()
-            Home(modifier = modifier, homeViewmodel = viewModel)
+
+        // Main container screen with drawer + top bar
+        composable("main/{screen}") { backStackEntry ->
+            val screen = backStackEntry.arguments?.getString("screen") ?: "home"
+
+            MainScreen(
+                navController = navController,
+                homeViewModel = homeViewModel,
+                currentScreen = screen
+            )
         }
 
-        composable(Screen.AddExpense.route) {
+        // Add Expense = separate full screen
+        composable("addExpense") {
             AddExpenseScreen(
                 navController = navController,
                 homeViewModel = homeViewModel

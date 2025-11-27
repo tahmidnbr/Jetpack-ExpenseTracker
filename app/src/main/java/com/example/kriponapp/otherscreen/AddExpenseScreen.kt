@@ -125,7 +125,7 @@ fun AddExpenseScreen(
                 OutlinedTextField(
                     value = date.formatToString(),
                     onValueChange = {},
-                    readOnly = true,
+                    enabled = false,
                     label = { Text("Date", fontFamily = ropa) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -158,7 +158,7 @@ fun AddExpenseScreen(
                                     id = homeViewModel.allExpenses.value.size + 1,
                                     title = title,
                                     categoryId = selectedCategory!!.id,
-                                    amount = amount.toDouble(),
+                                    amount = amount.toInt(),
                                     date = date
                                 )
                             )

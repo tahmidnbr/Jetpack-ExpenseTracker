@@ -1,5 +1,12 @@
 package com.example.kriponapp.viewmodels
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ClearAll
+import androidx.compose.material.icons.outlined.Fastfood
+import androidx.compose.material.icons.outlined.HealthAndSafety
+import androidx.compose.material.icons.outlined.NetworkCell
+import androidx.compose.material.icons.outlined.Payment
+import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -10,15 +17,14 @@ import com.example.kriponapp.models.Expenses
 import java.util.Date
 
 class HomeViewmodel: ViewModel() {
-
     private val _selectedCategory = mutableStateOf<Categories?>(null)
     val selectedCategories : State<Categories?> = _selectedCategory
 
     private val _allExpenses = mutableStateOf(
         listOf(
-            Expenses(1, "Health  Expenses", 2, 100.0, Date()),
-            Expenses(2, "Food  Expenses", 1, 50.0, Date()),
-            Expenses(3, "Internet  Bill", 4, 30.0, Date())
+            Expenses(1, "Health  Expenses", 2, 100, Date()),
+            Expenses(2, "Food  Expenses", 1, 50, Date()),
+            Expenses(3, "Internet  Bill", 4, 30, Date())
         )
     )
     val allExpenses: State<List<Expenses>> = _allExpenses

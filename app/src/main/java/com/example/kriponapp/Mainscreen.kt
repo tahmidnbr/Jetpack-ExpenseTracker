@@ -1,27 +1,21 @@
 package com.example.kriponapp
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Balance
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MonetizationOn
-import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Balance
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MonetizationOn
-import androidx.compose.material.icons.outlined.Money
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -37,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,13 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.kriponapp.graphs.AppNavGraph
-import com.example.kriponapp.graphs.Screen
-import com.example.kriponapp.models.Categories
 import com.example.kriponapp.models.categories
 import com.example.kriponapp.screens.Category
 import com.example.kriponapp.screens.Home
@@ -104,7 +94,6 @@ fun MainScreen(
         selectedIndex = darwItem.indexOfFirst { it.title.lowercase() == currentScreen }
     }
 
-
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
@@ -139,16 +128,23 @@ fun MainScreen(
         drawerState = drawerState
     ) {
         Scaffold(
+            containerColor = Color(0xffF6F1E9),
             topBar = {
                 TopAppBar(
-                    title = { Text(currentScreen.capitalize()) },
+                    title = {
+                        if (currentScreen != "home"){
+                            Text(currentScreen.capitalize()) }
+                        },
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch { drawerState.open() }
                         }) {
                             Icon(Icons.Default.Menu, contentDescription = null)
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color(0xffF6F1E9)
+                    )
                 )
             },
             floatingActionButton = {
@@ -159,14 +155,18 @@ fun MainScreen(
                         Icon(Icons.Default.Add, null)
                     }
                 }
-            }
+            },
         ) { padding ->
-
-            when (currentScreen) {
-                "home" -> Home(Modifier.padding(padding), homeViewModel)
-                "categories" -> Category(Modifier.padding(padding), categories= categories)
-                "budget" ->{}
-                "settings" -> {}
+            CompositionLocalProvider(
+                LocalOverscrollFactory provides null
+            ) {
+                // Your scrollable content here
+                when (currentScreen) {
+                    "home" -> Home(Modifier.padding(padding), homeViewModel)
+                    "categories" -> Category(Modifier.padding(padding), categories= categories)
+                    "budget" ->{}
+                    "settings" -> {}
+                }
             }
         }
     }

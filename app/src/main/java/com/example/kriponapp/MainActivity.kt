@@ -22,30 +22,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val homeViewModel = remember { HomeViewmodel() }
 
-                NavHost(
-                    navController = navController,
-                    startDestination = "main/home"
-                ) {
-
-                    // Main container screen with drawer + top bar
-                    composable("main/{screen}") { backStackEntry ->
-                        val screen = backStackEntry.arguments?.getString("screen") ?: "home"
-
-                        MainScreen(
-                            navController = navController,
-                            homeViewModel = homeViewModel,
-                            currentScreen = screen
-                        )
-                    }
-
-                    // Add Expense = separate full screen
-                    composable("addExpense") {
-                        AddExpenseScreen(
-                            navController = navController,
-                            homeViewModel = homeViewModel
-                        )
-                    }
-                }
+                AppNavGraph(navController = navController, homeViewModel = homeViewModel)
             }
         }
 

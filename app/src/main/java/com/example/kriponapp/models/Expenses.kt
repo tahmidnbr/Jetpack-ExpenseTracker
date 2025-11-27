@@ -6,6 +6,6 @@ data class Expenses(
     val id: Int,
     val title: String,
     val categoryId: Int,
-    val amount: Double,
+    val amount: Int,
     val date: Date
 )

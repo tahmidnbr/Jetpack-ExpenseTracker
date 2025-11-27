@@ -1,7 +1,6 @@
 package com.example.kriponapp.screens
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,20 +32,13 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kriponapp.R
 import com.example.kriponapp.models.Categories
 import com.example.kriponapp.models.categories
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardElevation
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.example.kriponapp.models.Expenses
 import com.example.kriponapp.viewmodels.HomeViewmodel
 import java.text.SimpleDateFormat
@@ -64,7 +55,6 @@ fun Home(
     val expenses = homeViewmodel.expensesForSelectedCategory
     LazyColumn(
         modifier = modifier
-            .background(Color(0xFFFFFFFF))
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
@@ -84,16 +74,16 @@ fun Home(
 fun ExpenseCard(expenses: List<Expenses>) {
 
     val total = expenses.sumOf { it.amount }  // Sum all expenses
-    val budget = 250.0 // dynamic if needed
+    val budget = 250 // dynamic if needed
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, Color(0xFFDBE2EF)),
+        border = BorderStroke(1.dp, Color(0xFFFFD93D)),
         elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xff3F72AF))// optional shadow
+        colors = CardDefaults.cardColors(containerColor = Color(0xffFF9A00))// optional shadow
     ) {
         Column(
             modifier = Modifier
@@ -124,7 +114,7 @@ fun ExpenseCard(expenses: List<Expenses>) {
             ) {
 
                 Text(
-                    "$${total}",
+                    "৳${total}",
                     fontSize = 50.sp,
                     fontFamily = ropa,
                     fontWeight = FontWeight.Bold,
@@ -160,7 +150,6 @@ fun Category(homeViewmodel: HomeViewmodel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-
     ) {
         Text(
             "Categories",
@@ -173,9 +162,7 @@ fun Category(homeViewmodel: HomeViewmodel) {
         )
 
         Spacer(modifier = Modifier.height(12.dp))
-        LazyRow(
-            //horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        LazyRow() {
             items(categories) { category ->
                 CategoryCard(
                     category = category,
@@ -197,7 +184,6 @@ fun CategoryCard(
     onClick: (Categories) -> Unit,
     isSelected: Boolean
 ){
-
     Card(
         modifier = Modifier
             .clickable(
@@ -207,13 +193,13 @@ fun CategoryCard(
             .padding(horizontal = 12.dp)
         ,
         colors = if(isSelected){
-            CardDefaults.cardColors(containerColor = Color(0xFFDBE2EF))
+            CardDefaults.cardColors(containerColor = Color(0xFFFFD93D))
         } else{
-            CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF))
+            CardDefaults.cardColors(containerColor = Color(0xFFF6F1E9))
         },
         elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(22.dp),
-        border = if (isSelected) {BorderStroke(width = 1.dp, color = Color.Transparent)} else {BorderStroke(width = 2.dp, color = Color(0xFFDBE2EF))}
+        shape = RoundedCornerShape(12.dp),
+        border = if (isSelected) {BorderStroke(width = 1.dp, color = Color.Transparent)} else {BorderStroke(width = 2.dp, color = Color(0xFFFFD93D))}
     ) {
         Row(
             modifier = Modifier
@@ -274,7 +260,9 @@ fun ExpenseItem(expenses: Expenses) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Card(
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFDBE2EF))
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFD93D)),
+            elevation = CardDefaults.cardElevation(4.dp),
+
         ) {
             Icon(
                 imageVector = expenses.categoryId.let { id ->
@@ -307,7 +295,7 @@ fun ExpenseItem(expenses: Expenses) {
 
         Spacer(modifier = Modifier.width(18.dp))
         Text(
-            "$${expenses.amount}",
+            "৳${expenses.amount}",
             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
